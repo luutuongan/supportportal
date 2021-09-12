@@ -89,12 +89,14 @@ public class ExceptionHanding {
         HttpMethod supportedMethod = Objects.requireNonNull(exception.getSupportedHttpMethods()).iterator().next();
         return createHttpResponse(HttpStatus.METHOD_NOT_ALLOWED, String.format(METHOD_NOT_ALLOWED, supportedMethod));
     }
-
+/*
     @ExceptionHandler(Exception.class)
     public ResponseEntity<HttpResponse> internalServerErrorException(Exception exception) {
         LOGGER.error(exception.getMessage());
         return createHttpResponse(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_SERVER_ERROR);
     }
+
+ */
 
     @ExceptionHandler(NoResultException.class)
     public ResponseEntity<HttpResponse> notFoundException(Exception exception) {
@@ -109,12 +111,15 @@ public class ExceptionHanding {
     }
 
     private ResponseEntity<HttpResponse> createHttpResponse(HttpStatus httpStatus, String message) {
-        HttpResponse httpResponse = new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(), message.toUpperCase());
+        HttpResponse httpResponse = new HttpResponse(httpStatus.value(), httpStatus,
+                httpStatus.getReasonPhrase().toUpperCase(), message.toUpperCase());
         return new ResponseEntity<>(httpResponse, httpStatus);
     }
-
+/*
     @RequestMapping(ERROR_PATH)
     public ResponseEntity<HttpResponse> notFoundPage() {
         return createHttpResponse(HttpStatus.NOT_FOUND, "There is no mapping for this URL");
     }
+
+ */
 }

@@ -45,10 +45,12 @@ public class JWTTokenProvider {
         return stream(claims).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
-    public Authentication getAuthentication(String username, List<GrantedAuthority> authorities, HttpServletRequest httpServletRequest) {
+    public Authentication getAuthentication(String username, List<GrantedAuthority> authorities,
+                                            HttpServletRequest httpServletRequest) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new
                 UsernamePasswordAuthenticationToken(username, null, authorities);
-        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+        usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource()
+                .buildDetails(httpServletRequest));
         return usernamePasswordAuthenticationToken;
     }
 
