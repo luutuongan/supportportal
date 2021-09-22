@@ -19,7 +19,7 @@ public class LoginAttemptService {
         loginAttemptCache = CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES).maximumSize(100)
                 .build(new CacheLoader<String, Integer>() {
                     @Override
-                    public Integer load(String s) throws Exception {
+                    public Integer load(String key) throws Exception {
                         return 0;
                     }
                 });
@@ -39,7 +39,12 @@ public class LoginAttemptService {
         }
     }
 
-    public boolean hasExceedMaxAttempts(String username) throws ExecutionException {
-        return loginAttemptCache.get(username) >= MAX_NO_OF_ATTEMPTS;
+    public boolean hasExceedMaxAttempts(String username) {
+        try {
+            return loginAttemptCache.get(username) >= MAX_NO_OF_ATTEMPTS;
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
