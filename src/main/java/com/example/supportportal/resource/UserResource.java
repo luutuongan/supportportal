@@ -16,6 +16,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequestMapping(path = {"/", "/user"})
 public class UserResource extends ExceptionHanding {
@@ -40,7 +42,7 @@ public class UserResource extends ExceptionHanding {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UserExistedException, EmailExistedException {
+    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UserExistedException, EmailExistedException, MessagingException {
         User signupUser = userService.register(user.getFirstName(),user.getLastName(),user.getUsername(),user.getEmail());
         return new ResponseEntity<>(signupUser, HttpStatus.OK);
     }

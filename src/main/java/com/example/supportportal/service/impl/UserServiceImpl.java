@@ -8,6 +8,7 @@ import com.example.supportportal.exception.domain.EmailExistedException;
 import com.example.supportportal.exception.domain.UserExistedException;
 import com.example.supportportal.exception.domain.UserNotFoundException;
 import com.example.supportportal.repo.UserRepository;
+import com.example.supportportal.service.EmailService;
 import com.example.supportportal.service.LoginAttemptService;
 import com.example.supportportal.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
@@ -39,11 +41,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private LoginAttemptService loginAttemptService;
 
+    private EmailService emailService;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, LoginAttemptService loginAttemptService) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+                           LoginAttemptService loginAttemptService, EmailService emailService) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.loginAttemptService = loginAttemptService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -77,7 +83,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public User register(String firstName, String lastName, String username, String email) throws
-            UserExistedException, EmailExistedException, UserNotFoundException {
+            UserExistedException, EmailExistedException, UserNotFoundException, MessagingException {
         validateUsernameAndEmail(StringUtils.EMPTY, username, email);
         User user = new User();
         user.setUserId(generateUserId());
@@ -96,6 +102,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setProfileImageUrl(getTempProfImgUrl());
         userRepository.save(user);
         LOGGER.info("New user password: "+password);
+        emailService.sendNewPasswordEmail(firstName, password, email);
         return user;
     }
 

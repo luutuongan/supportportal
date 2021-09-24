@@ -5,11 +5,12 @@ import com.example.supportportal.exception.domain.EmailExistedException;
 import com.example.supportportal.exception.domain.UserExistedException;
 import com.example.supportportal.exception.domain.UserNotFoundException;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface UserService {
 
-    User register(String firstName, String lastName, String username, String email) throws UserExistedException, EmailExistedException, UserNotFoundException;
+    User register(String firstName, String lastName, String username, String email) throws UserExistedException, EmailExistedException, UserNotFoundException, MessagingException;
 
     List<User> getUsers();
 
