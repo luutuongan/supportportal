@@ -15,7 +15,7 @@ public enum Role {
         this.authorities = authorities;
     }
 
-    public String[] getAuthorities() {
+    public String[] getRoleAuthorities() {
         return authorities;
     }
 }
